@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 
 [CustomEditor(typeof(KeyBinding), true)]
 public class ComponentKeyBindingEditor : ComponentCommandBindingEditor

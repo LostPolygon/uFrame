@@ -6,18 +6,16 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(FPSWeaponView))]
 public partial class FPSWeaponFire
 {
+
     public Transform _MuzzleTransform;
     public GameObject _BulletPrefab;
     private Vector3 _StartPosition;
     private Quaternion _StartRotation;
 
-    public float _Spread;
 
     public override void Bind(ViewBase view)
     {
         base.Bind(view);
-
-        _Spread = FPSWeapon.MinSpread;
 
         view.BindInputButton(() => FPSWeapon.BeginFire, "Fire1", InputButtonEventType.ButtonDown)
             .When(() => FPSWeapon.State == FPSWeaponState.Active).Subscribe(Fire);
@@ -34,27 +32,32 @@ public partial class FPSWeaponFire
         {
             FireBullet();
             yield return new WaitForSeconds(FPSWeapon.BurstSpeed);
-            _Spread += FPSWeapon.SpreadMultiplier;
+            FPSWeapon.Spread += FPSWeapon.SpreadMultiplier;
           
         }
         yield return new WaitForSeconds(FPSWeapon.FireSpeed);
 
         if (FPSWeapon.State == FPSWeaponState.Firing && FPSWeapon.BurstSize < 2)
         StartCoroutine("FireWeapon");
+
     }
 
     public void FireBullet()
     {
         var bullet = Instantiate(_BulletPrefab) as GameObject;
-        ExecuteBulletFired();
+        FPSWeapon.Ammo -= 1;
+        FPSWeapon.Spread += FPSWeapon.SpreadMultiplier;
+
+        //// Apply some backfire
+        //this.transform.localPosition -=
+        //    (-transform.forward * Model.RecoilSpeed * (Model.Spread * 17f));
 
         Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f));
 
         var ray = Camera.main.ViewportPointToRay(
             new Vector3(
-                Random.Range(-_Spread, _Spread) + 0.5f,
-                Random.Range(-_Spread, _Spread) + 0.5f, 0f));
-
+                Random.Range(-FPSWeapon.Spread, FPSWeapon.Spread) + 0.5f,
+                Random.Range(-FPSWeapon.Spread, FPSWeapon.Spread) + 0.5f, 0f));
         RaycastHit hit;
         Vector3 targetPoint;
         if (Physics.Raycast(ray, out hit, 100f))
@@ -82,12 +85,13 @@ public partial class FPSWeaponFire
 
     public IEnumerator SpreadDown()
     {
-        while (_Spread > FPSWeapon.MinSpread)
+
+        while (FPSWeapon.Spread > FPSWeapon.MinSpread)
         {
             yield return new WaitForSeconds(FPSWeapon.RecoilSpeed);
-            _Spread -= FPSWeapon.RecoilSpeed;
+            FPSWeapon.Spread -= FPSWeapon.RecoilSpeed;
         }
-        _Spread = FPSWeapon.MinSpread;
+        FPSWeapon.Spread = FPSWeapon.MinSpread;
     }
   
     public void Fire()

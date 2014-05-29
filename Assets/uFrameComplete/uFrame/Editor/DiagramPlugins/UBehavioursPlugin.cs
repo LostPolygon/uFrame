@@ -1,21 +1,10 @@
-using System.Collections.Generic;
-
-using Invert.uFrame.Editor.ElementDesigner;
-using Invert.uFrame.Editor.ElementDesigner.Data;
+﻿using Invert.uFrame.Editor.ElementDesigner.Data;
 using UnityEditor;
-using UnityEngine;
 
 namespace Assets.uFrameComplete.uFrame.Editor.DiagramPlugins
 {
     public class UBehavioursPlugin : DiagramPlugin
     {
-  
-
-        public override void Initialize()
-        {
-            Debug.Log("UBehaviours Plugin Initialized.");
-        }
-
         public override IElementDrawer GetDrawer(ElementsDiagram diagram, IDiagramItem data)
         {
             if (data is ViewData)
@@ -25,6 +14,9 @@ namespace Assets.uFrameComplete.uFrame.Editor.DiagramPlugins
             return null;
         }
 
-    
+        public override void OnAddContextItems(ElementsDiagram diagram, GenericMenu menu)
+        {
+            
+        }
     }
 }

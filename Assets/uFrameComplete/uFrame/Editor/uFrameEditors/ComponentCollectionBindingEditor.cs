@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 
 [CustomEditor(typeof(ViewModelCollectionBinding),true)]
 public class ComponentCollectionBindingEditor : ComponentBindingEditor

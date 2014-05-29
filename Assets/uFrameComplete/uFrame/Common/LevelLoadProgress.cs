@@ -1,4 +1,4 @@
-/// <summary>
+﻿/// <summary>
 /// A struct for passing a message and a progress indicator
 /// </summary>
 public struct LevelLoadProgress

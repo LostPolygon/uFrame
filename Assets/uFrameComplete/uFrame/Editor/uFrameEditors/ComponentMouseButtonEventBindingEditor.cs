@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 
 [CustomEditor(typeof(MouseEventBinding), true)]
 public class ComponentMouseButtonEventBindingEditor : ComponentCommandBindingEditor

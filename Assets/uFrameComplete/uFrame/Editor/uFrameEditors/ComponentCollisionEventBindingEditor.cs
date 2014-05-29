@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 
 [CustomEditor(typeof(CollisionEventBinding), true)]
 public class ComponentCollisionEventBindingEditor : ComponentCommandBindingEditor

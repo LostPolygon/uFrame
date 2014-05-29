@@ -20,21 +20,21 @@ public class ElementDesignerData : ScriptableObject, IRefactorable
     [SerializeField]
     private Color _subSystemLinkColor = Color.grey;
 
-    [SerializeField]
+[SerializeField]
     private Color _inheritanceLinkColor = Color.red;
 
-    [SerializeField]
-    private Color _SceneManagerLinkColor = Color.yellow;
+[SerializeField]
+private Color _SceneManagerLinkColor = Color.yellow;
 
-    [SerializeField]
-    private Color _viewLinkColor = Color.magenta;
+[SerializeField]
+private Color _viewLinkColor = Color.magenta;
 
-    [SerializeField, HideInInspector]
+[SerializeField, HideInInspector]
     private List<EnumData> _enums = new List<EnumData>();
 
     private Stack<IDiagramFilter> _filterStack;
 
-    [SerializeField, HideInInspector]
+[SerializeField, HideInInspector]
     private DefaultFilter _defaultFilter = new DefaultFilter();
 
     [SerializeField]
@@ -56,7 +56,7 @@ public class ElementDesignerData : ScriptableObject, IRefactorable
     private float _snapSize = 10f;
     [SerializeField, HideInInspector]
     private List<SubSystemData> _subSystems = new List<SubSystemData>();
-    [SerializeField, HideInInspector]
+    [SerializeField,HideInInspector]
     private string _version;
 
     [SerializeField, HideInInspector]
@@ -378,13 +378,7 @@ public class ElementDesignerData : ScriptableObject, IRefactorable
             PopFilter();
         }
     }
-    public void PopToFilter(string filterName)
-    {
-        while (CurrentFilter.Name != filterName)
-        {
-            PopFilter();
-        }
-    }
+
     public void PushFilter(IDiagramFilter filter)
     {
         FilterLeave();
@@ -416,7 +410,7 @@ public class ElementDesignerData : ScriptableObject, IRefactorable
     {
         CleanUpFilters();
         Links.Clear();
-
+        
         var items = DiagramItems.SelectMany(p => p.Items).Where(p => CurrentFilter.IsItemAllowed(p, p.GetType())).ToArray();
         var diagramItems = this.DiagramItems.ToArray();
         foreach (var item in items)
@@ -447,7 +441,7 @@ public class ElementDesignerData : ScriptableObject, IRefactorable
         }
     }
 
-
+   
 
     protected IEnumerable<IDiagramItem> FilterItems(IEnumerable<IDiagramItem> allDiagramItems)
     {
@@ -504,7 +498,7 @@ public class ElementDesignerData : ScriptableObject, IRefactorable
             return
                 AllDiagramItems.OfType<IRefactorable>()
                     .SelectMany(p => p.Refactorings)
-                    .Concat(AllDiagramItems.SelectMany(p => p.Items).OfType<IRefactorable>().SelectMany(p => p.Refactorings))
+                    .Concat(AllDiagramItems.SelectMany(p => p.Items).OfType<IRefactorable>().SelectMany(p=>p.Refactorings))
                     .ToList();
         }
     }

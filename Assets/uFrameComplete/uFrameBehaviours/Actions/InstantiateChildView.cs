@@ -1,4 +1,4 @@
-using UBehaviours.Actions;
+﻿using UBehaviours.Actions;
 
 public class InstantiateChildView : UBAction
 {

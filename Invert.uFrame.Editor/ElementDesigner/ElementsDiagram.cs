@@ -1,4 +1,3 @@
-using Invert.uFrame.Editor.ElementDesigner;
 using Invert.uFrame.Editor.ElementDesigner.Data;
 using System;
 using System.Collections.Generic;
@@ -30,41 +29,14 @@ public class ElementsDiagram
 
     private SerializedObject _serializedObject;
     private Event _currentEvent;
-    private static IDiagramCommand[] _commands;
-    private static ToolbarCommand[] _toolbarCommands;
 
     public static DiagramPlugin[] Plugins
     {
         get
         {
-            if (_plugins != null) return _plugins;
-
-            _plugins =
-                GetDerivedTypes<DiagramPlugin>(false, false)
-                    .Select(p => Activator.CreateInstance(p) as DiagramPlugin)
-                    .ToArray();
-
-            foreach (var diagramPlugin in _plugins)
-            {
-                diagramPlugin.Initialize();
-            }
-
-            return _plugins;
+            return _plugins ?? (_plugins = GetDerivedTypes<DiagramPlugin>(false, false).Select(p => Activator.CreateInstance(p) as DiagramPlugin).ToArray());
         }
         set { _plugins = value; }
-    }
-
-    public static IDiagramCommand[] Commands
-    {
-        get
-        {
-            return _commands ?? (_commands = GetDerivedTypes<DiagramCommand>(false, false).Select(p => Activator.CreateInstance(p) as IDiagramCommand).ToArray());
-        }
-    }
-
-    public static ToolbarCommand[] ToolbarCommands
-    {
-        get { return _toolbarCommands ?? (_toolbarCommands = Commands.OfType<ToolbarCommand>().ToArray()); }
     }
 
     public IEnumerable<IDiagramItem> AllSelected
@@ -210,7 +182,7 @@ public class ElementsDiagram
 
             if (old != value && value != null)
             {
-
+                
                 OnSelectionChanged(old == null ? null : old.Model, value.Model);
             }
         }
@@ -422,7 +394,7 @@ public class ElementsDiagram
     {
         foreach (var diagramPlugin in Plugins)
         {
-            var drawer = diagramPlugin.GetDrawer(this, item);
+            var drawer = diagramPlugin.GetDrawer(this,item);
             if (drawer != null)
             {
                 return drawer;
@@ -501,7 +473,7 @@ public class ElementsDiagram
     }
     public float SnapSize
     {
-        get { return Data.SnapSize * Scale; }
+        get { return Data.SnapSize*Scale; }
     }
     public void Draw()
     {
@@ -551,16 +523,16 @@ public class ElementsDiagram
             var newPosition = DragDelta;//CurrentMousePosition - SelectionOffset;
             foreach (var diagramItem in AllSelected)
             {
-                diagramItem.Location += (newPosition * (1f / Scale));
-
+                diagramItem.Location += (newPosition * (1f/Scale));
+                
                 //diagramItem.Location = new Vector2(Mathf.Round((diagramItem.Location.x)/ SnapSize) * SnapSize, Mathf.Round(diagramItem.Location.y / SnapSize) * SnapSize);
-
+              
                 //var newPositionRect = new Rect(newPosition.x, newPosition.y, diagramItem.Position.width,
                 //    diagramItem.Position.height);
                 ////Math.Round(value / 5.0) * 5
                 //diagramItem.Position = newPositionRect;
             }
-
+            
             foreach (var viewModelDrawer in ElementDrawers)
             {
                 viewModelDrawer.CalculateBounds();
@@ -601,7 +573,7 @@ public class ElementsDiagram
                     {
                         Debug.Log(ex.Message);
                     }
-
+                 
                 }
             }
             else
@@ -661,7 +633,6 @@ public class ElementsDiagram
 
         //GUI.matrix = beforeScale;
     }
-    
 
     public DiagramItemDrawer<TData> GetDrawer<TData>(TData data) where TData : IDiagramItem
     {
@@ -785,11 +756,11 @@ public class ElementsDiagram
         if (Data.CurrentFilter.IsAllowed(null, typeof(SubSystemData)))
             menu.AddItem(new GUIContent("New Sub System"), false, () => { AddNewSubDiagram(addAtMousePosition); });
 
-        //foreach (var diagramPlugin in Plugins)
-        //{
-        //    if (diagramPlugin == null) continue;
-        //    diagramPlugin.OnAddContextItems(this, menu);
-        //}
+        foreach (var diagramPlugin in Plugins)
+        {
+            if (diagramPlugin == null) continue;
+            diagramPlugin.OnAddContextItems(this, menu);
+        }
 
         menu.AddSeparator("");
         foreach (var item in Data.ImportableItems)
@@ -851,13 +822,13 @@ public class ElementsDiagram
                 if (filter.Locations.Keys.Count > 1)
                 {
                     EditorUtility.DisplayDialog("Delete sub items first.",
-                        "There are items defined inside this item please hide or delete them before removing this item.", "OK");
+                        "There are items defined inside this item please hide or delete them before removing this item.","OK");
                     return;
                 }
             }
             if (EditorUtility.DisplayDialog("Confirm", "Are you sure you want to delete this?", "Yes", "No"))
             {
-
+               
                 selected.RemoveFromDiagram();
                 if (customFileFullPaths.Length > 0)
                 {
@@ -971,11 +942,11 @@ public class ElementsDiagram
             });
         }
 
-        //foreach (var diagramPlugin in Plugins)
-        //{
-        //    if (diagramPlugin == null) continue;
-        //    diagramPlugin.OnAddContextItems(this, menu);
-        //}
+        foreach (var diagramPlugin in Plugins)
+        {
+            if (diagramPlugin == null) continue;
+            diagramPlugin.OnAddContextItems(this, menu);
+        }
     }
 
     protected virtual void OnAddNewBehaviourClicked(ElementData data)
@@ -1073,37 +1044,32 @@ public class ElementsDiagram
 
     private void OnDoubleClick()
     {
-
-        if (SelectedData != null)
+        if (SelectedData != null && SelectedItem == null)
         {
-            if (SelectedItem == null)
+            if (SelectedData is IDiagramFilter)
             {
-                if (SelectedData is IDiagramFilter)
+                if (SelectedData == Data.CurrentFilter)
                 {
-                    if (SelectedData == Data.CurrentFilter)
-                    {
-                        Data.PopFilter();
-                    }
-                    else
-                    {
-                        Data.PushFilter(SelectedData as IDiagramFilter);
-                    }
-
-                    Refresh(true);
+                    Data.PopFilter();
                 }
                 else
                 {
-                    Selected.DoubleClicked();
+                    Data.PushFilter(SelectedData as IDiagramFilter);
                 }
+
+                Refresh(true);
             }
-
+            //var data = Selected as SceneManagerData;
+            //if (data != null)
+            //{
+            //    data.CreateScene(Repository);
+            //}
         }
-
     }
 
     private void OnMouseDown()
     {
-
+       
         var selected = MouseOverViewData;
         if (selected != null)
         {
@@ -1127,14 +1093,14 @@ public class ElementsDiagram
         {
             //if (AllSelected.All(p => p != SelectedData))
             //{
-            foreach (var diagramItem in AllSelected)
-            {
-                if (diagramItem.IsEditing)
+                foreach (var diagramItem in AllSelected)
                 {
-                    diagramItem.EndEditing(Repository);
+                    if (diagramItem.IsEditing)
+                    {
+                        diagramItem.EndEditing(Repository);
+                    }
+                    diagramItem.IsSelected = false;
                 }
-                diagramItem.IsSelected = false;
-            }
             //}
         }
 

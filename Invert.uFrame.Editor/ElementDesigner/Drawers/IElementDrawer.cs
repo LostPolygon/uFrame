@@ -8,5 +8,4 @@ public interface IElementDrawer
     bool IsSelected { get; }
     IDiagramItem Model { get; }
     IEnumerable<IDiagramSubItem> Items { get; }
-    void DoubleClicked();
 }

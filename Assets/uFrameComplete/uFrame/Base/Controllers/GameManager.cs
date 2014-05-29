@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -127,7 +127,6 @@ public class GameManager : MonoBehaviour
 
     public static Coroutine SwitchGame<T>(Action<T> setup, UpdateProgressDelegate progress = null) where T : SceneManager
     {
-var currentSceneManager = GameManager.ActiveSceneManager;
         return SwitchGame(Instance.Games.OfType<T>().First());
     }
 

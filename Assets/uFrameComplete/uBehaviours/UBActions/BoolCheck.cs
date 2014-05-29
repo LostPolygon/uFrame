@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 [UBCategory(" UBehaviours")]
 public class BoolCheck : UBConditionAction
 {

@@ -1,4 +1,4 @@
-//#define USE_SharpZipLib
+﻿//#define USE_SharpZipLib
 
 /* * * * *
  * \dontinclude SimpleJSON.cs

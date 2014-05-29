@@ -1,4 +1,4 @@
-public class LevelLoaderView : View<LevelLoadViewModel>
+﻿public class LevelLoaderView : View<LevelLoadViewModel>
 {
 
     public override void Bind()

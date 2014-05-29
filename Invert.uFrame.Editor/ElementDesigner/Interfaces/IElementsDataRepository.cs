@@ -27,5 +27,9 @@ public interface
     bool IsImportOnly(Type item);
     DiagramItem ImportType(Type item);
     
-    void NavigateToView(ViewData data);
+    //void RefactorElementName(ElementData elementData);
+    //void RefactorSceneManagerName(SceneManagerData sceneManagerData);
+    //void RefactorViewName(ViewData viewData);
+    //void RefactorViewComponentName(ViewComponentData viewComponentData);
+    
 }
