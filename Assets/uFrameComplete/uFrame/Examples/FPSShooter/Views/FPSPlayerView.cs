@@ -58,3 +58,25 @@ public partial class FPSPlayerView : FPSPlayerViewBase
         
     }
 }
+
+public class FPSPlayerNetworkView : UFNetworkView
+{
+    public FPSPlayerView FPSPlayerView
+    {
+        get { return View as FPSPlayerView; }
+    }
+
+    public FPSPlayerViewModel FPSPlayer
+    {
+        get { return View.ViewModelObject as FPSPlayerViewModel; }
+    }
+
+    public void CreateSyncronizedVariables()
+    {
+        base.Initialize();
+
+        FPSPlayer.SelectWeapon = Manager.CreateNetworkCommand(this.Identifier, FPSPlayer.SelectWeapon);
+        Manager.CreateNetworkProperty(this.Identifier,
+            FPSPlayer._CurrentWeaponIndexProperty);
+    }
+}

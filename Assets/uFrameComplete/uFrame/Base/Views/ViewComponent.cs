@@ -18,12 +18,22 @@ public abstract class ViewComponent : MonoBehaviour, IBindingProvider
         View.BindingProviders.Add(this);
     }
 
+    public virtual void PreBind(ViewBase viewBase)
+    {
+        
+    }
+
     public virtual void Bind(ViewBase view)
     {
 
     }
 
     public virtual void Unbind(ViewBase viewBase)
+    {
+        
+    }
+
+    public virtual void PostBind(ViewBase viewBase)
     {
         
     }

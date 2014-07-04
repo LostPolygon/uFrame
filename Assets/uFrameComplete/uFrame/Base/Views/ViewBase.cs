@@ -312,7 +312,8 @@ public abstract class ViewBase : ViewContainer
         if (_bound)
             return;
         // Initialize the model
-
+        foreach (var bindingProvider in BindingProviders)
+            bindingProvider.PreBind(this);
 
         // Loop through and binding providers and let them add bindings
         foreach (var bindingProvider in BindingProviders)
@@ -323,6 +324,10 @@ public abstract class ViewBase : ViewContainer
         // Initialize the bindings
         for (var i = 0; i < Bindings.Count; i++)
             Bindings[i].Bind();
+
+        // Loop through and binding providers and let them add bindings
+        foreach (var bindingProvider in BindingProviders)
+            bindingProvider.PostBind(this);
 
         for (var i = 0; i < transform.childCount; i++)
         {
