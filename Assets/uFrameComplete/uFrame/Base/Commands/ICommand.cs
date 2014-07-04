@@ -8,6 +8,8 @@ public delegate void CommandEvent();
 /// </summary>
 public interface ICommand
 {
+    string Identifier { get; set; }
+
     event CommandEvent OnCommandExecuted;
 
     event CommandEvent OnCommandExecuting;

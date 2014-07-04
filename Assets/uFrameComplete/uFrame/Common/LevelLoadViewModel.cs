@@ -19,4 +19,10 @@ public sealed class LevelLoadViewModel : ViewModel
         get { return _Status.Value; }
         set { _Status.Value = value; }
     }
+
+    public void Set(float progress, string status)
+    {
+        Progress = progress;
+        Status = status;
+    }
 }

@@ -7,6 +7,7 @@ using System.Collections;
 /// </summary>
 public class Command : ICommand
 {
+    public string Identifier { get; set; }
     public event CommandEvent OnCommandExecuted;
 
     public event CommandEvent OnCommandExecuting;

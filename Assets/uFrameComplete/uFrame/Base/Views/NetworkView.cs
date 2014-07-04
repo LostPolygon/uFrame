@@ -2,135 +2,188 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkView
-{
+//public class NetworkView
+//{
     
-}
-public class NetworkCommand : ICommand
-{
-    public string OwnerIdentifier { get; set; }
-    public string Identifier { get; set; }
-    public ICommand ActualCommand { get; set; }
+//}
+//public class NetworkCommand : ICommand
+//{
+//    public string OwnerIdentifier { get; set; }
+//    public string Identifier { get; set; }
+//    public ICommand ActualCommand { get; set; }
 
-    public event CommandEvent OnCommandExecuted
-    {
-        add { ActualCommand.OnCommandExecuted += value; }
-        remove { ActualCommand.OnCommandExecuted -= value; }
-    }
+//    public event CommandEvent OnCommandExecuted
+//    {
+//        add { ActualCommand.OnCommandExecuted += value; }
+//        remove { ActualCommand.OnCommandExecuted -= value; }
+//    }
 
-    public event CommandEvent OnCommandExecuting
-    {
-        add { ActualCommand.OnCommandExecuting += value; }
-        remove { ActualCommand.OnCommandExecuting -= value; }
-    }
+//    public event CommandEvent OnCommandExecuting
+//    {
+//        add { ActualCommand.OnCommandExecuting += value; }
+//        remove { ActualCommand.OnCommandExecuting -= value; }
+//    }
 
-    public object Sender
-    {
-        get { return ActualCommand.Sender; }
-        set { ActualCommand.Sender = value; }
-    }
+//    public object Sender
+//    {
+//        get { return ActualCommand.Sender; }
+//        set { ActualCommand.Sender = value; }
+//    }
 
-    public object Parameter
-    {
-        get { return ActualCommand.Parameter; }
-        set { ActualCommand.Parameter = value; }
-    }
+//    public object Parameter
+//    {
+//        get { return ActualCommand.Parameter; }
+//        set { ActualCommand.Parameter = value; }
+//    }
 
-    public IEnumerator Execute()
-    {
-        return ActualCommand.Execute();
-    }
-}
-public interface IUFrameNetworking
-{
-    void SyncView(ViewBase view);
-    void SyncViewModel<T>(string identifier, T viewModel);
+//    public IEnumerator Execute()
+//    {
+//        return ActualCommand.Execute();
+//    }
+//}
+//public interface IUFrameNetworking
+//{
+//    void Connect(string endpoint, int port, string password = null);
+//}
 
-    void SyncProperty<TPropertyValueType>(string viewIdentifier, ModelPropertyBase property);
+//public class UFUnityNetworking : NetworkView, IUFrameNetworking
+//{
+//    [Inject]
+//    public LevelLoadViewModel ProgressViewModel { get; set; }
 
-}
-
-public class NetworkManager
-{
-    public IUFrameNetworking Networking { get; set; }
-    public Dictionary<string, INetworkView> NetworkViews { get; set; }
-
-
-    public string SendCommand(INetworkView view, ICommand command)
-    {
-        var networkCommand = command as NetworkCommand;
-        if (networkCommand != null)
-        {
-            Networking.RPC(networkCommand.OwnerIdentifier, networkCommand.Identifier);
-        }
-    }
-    public string AddNetworkView(string viewModelIdentifier, INetworkView networkView)
-    {
-        NetworkViews.Add(networkView.Identifier, networkView);
-        foreach (var view in networkView.SyncronizedCommands)
-        {
-
-        }
-    }
-
-    public string InstantiateNetworkView(GameObject prefab, ViewModel model)
-    {
-        // Send message to syncronize the viewmodel
+//    public void Awake()
+//    {
         
-    }
+//    }
 
-    public NetworkCommand CreateNetworkCommand(string identifier, ICommand command)
-    {
-        return new NetworkCommand()
-        {
-            ActualCommand = command,
-            Identifier = identifier
-        };
-    }
+//    public bool _SendDisconnectNotification = false;
+//    public int _Connections = 5;
+//    public int _ServerPort = 1337;
+//    public bool _UseNat = false;
 
-    public void CreateNetworkProperty(string identifier, ModelPropertyBase property)
-    {
+//    public bool IsServer { get; set; }
+
+//    public IEnumerator Begin()
+//    {
+
+//        ProgressViewModel.Set(0f,"Initializing Server");
+//    }
+
+
+//    public void StartServer()
+//    {
+//        Network.InitializeServer(_Connections, _ServerPort, _UseNat);
+//    }
+
+//    public void Connect(string endpoint,int port,string password = null)
+//    {
+//        Network.Connect(endpoint, port, password);
+//    }
+
+//    public void Disconnect()
+//    {
+//        Network.Disconnect();
+//    }
+
+//    public void CloseConnection(string user)
+//    {
         
-    }
-}
+//        Network.CloseConnection(Network.player, _SendDisconnectNotification);
+//    }
+    
+//}
 
+//public class NetworkManager
+//{
+//    public IUFrameNetworking Networking { get; set; }
+//    public Dictionary<string, INetworkView> NetworkViews { get; set; }
 
+//    public void RegisterView(INetworkView view)
+//    {
+//        if (NetworkViews.ContainsKey(view.Identifier))
+//        {
+//            NetworkViews.Add(view.Identifier,view);
+//        }
+//    }
 
-public class UFNetworkView : ViewComponent, INetworkView
-{
-    public string Identifier
-    {
-        get { return View.ViewModelObject.Identifier; }
-    }
-
-    public NetworkManager Manager
-    {
-        get
-        {
-            return GameManager.Container.Resolve<NetworkManager>();
-        }
-    }
-
-    public override void PreBind(ViewBase viewBase)
-    {
-        base.PreBind(viewBase);
+//    public void SendCommand(string identifier, ICommand command)
+//    {
         
-    }
+//    }
 
-    public override void PostBind(ViewBase viewBase)
-    {
-        base.PostBind(viewBase);
-        Manager.AddNetworkView(this);
-    }
-
-    public virtual void Initialize()
-    {
+//    public void SendPropertyChanged(string instanceId, string propertyId, object value)
+//    {
         
-    }
-}
-public interface INetworkView
-{
-    string Identifier { get; }
+//    }
 
-}
+//    public void Instantiate(string prefabName, ViewModel model)
+//    {
+        
+        
+//    }
 
+//}
+
+//public class ViewModelSerializer<T> : IViewModelSerializer
+//{
+    
+//}
+
+//public interface IViewModelSerializer
+//{
+//}
+
+//public class UFNetworkView : ViewComponent, INetworkView
+//{
+//    public bool IsOwner { get; set; }
+//    public string Identifier
+//    {
+//        get { return View.ViewModelObject.Identifier; }
+//    }
+
+//    public NetworkManager Manager
+//    {
+//        get
+//        {
+//            return GameManager.Container.Resolve<NetworkManager>();
+//        }
+//    }
+
+//    public override void PreBind(ViewBase viewBase)
+//    {
+//        base.PreBind(viewBase);
+        
+//    }
+
+//    public override void PostBind(ViewBase viewBase)
+//    {
+//        base.PostBind(viewBase);
+//        Manager.RegisterView(this);
+//    }
+
+//    public virtual void Initialize()
+//    {
+        
+//    }
+//}
+//public interface INetworkView
+//{
+//    string Identifier { get; }
+
+//}
+
+////public interface IPacket
+////{
+////    void Send()
+////}
+
+////public interface IStream
+////{
+////    void WriteInt(int value);
+////    void WriteBool(bool value);
+////    void WriteString(string value);
+////    void WriteFloat(float value);
+////    void WriteVector3(Vector3 value);
+////    void WriteVector2(Vector2 value);
+    
+////}
