@@ -34,7 +34,7 @@ namespace uFrame.Kernel
             this.OnEvent<LoadSceneCommand>().Subscribe(_ =>
             {
 
-                this.LoadScene(_.SceneName, _.Settings);
+                this.LoadScene(_.SceneName, _.Settings, _.RestrictToSingleScene);
             });
 
             this.OnEvent<UnloadSceneCommand>().Subscribe(_ =>
@@ -86,6 +86,9 @@ namespace uFrame.Kernel
         {
             foreach (var item in items)
             {
+                if (item.RestrictToSingleScene &&
+                    (LoadedScenes.Any(p => p.Name == name) || ScenesQueue.Any(p => p.Name == name) ||
+                     Application.loadedLevelName == name)) continue;
                 if (item.Loader == null)
                 {
                     item.Loader = LoadSceneInternal(item.Name);
@@ -112,10 +115,11 @@ namespace uFrame.Kernel
 
             this.Publish(new SceneLoaderEvent()
             {
-                State = SceneState.Instantiated,
+                State = SceneState.Instantiating,
                 SceneRoot = sceneRoot
             });
 
+            
 
 
             //If the scene was loaded via the api (it was queued having some name and settings)
@@ -137,11 +141,13 @@ namespace uFrame.Kernel
                 State = SceneState.Instantiated,
                 SceneRoot = sceneRoot
             });
-
+            var sceneRootClosure = sceneRoot;
             Action<float, string> updateDelegate = (v, m) =>
             {
                 this.Publish(new SceneLoaderEvent()
                 {
+                    SceneRoot = sceneRootClosure,
+                    Name = sceneRootClosure.Name,
                     State = SceneState.Update,
                     Progress = v,
                     ProgressMessage = m
@@ -225,25 +231,18 @@ namespace uFrame.Kernel
             }
         }
 
-        public void LoadScene(string name, ISceneSettings settings)
+        public void LoadScene(string name, ISceneSettings settings, bool restrictToSingleScene)
         {
-            this.QueueSceneLoad(name, settings);
-            this.ExecuteLoad();
-        }
-
-        public void LoadSceneIfNotAlready(string name, ISceneSettings settings)
-        {
-            if (LoadedScenes.Any(p => p.Name == name) || ScenesQueue.Any(p => p.Name == name) ||
-                Application.loadedLevelName == name)
-            {
-                return;
-            }
+            if (restrictToSingleScene &&
+                (LoadedScenes.Any(p => p.Name == name) || ScenesQueue.Any(p => p.Name == name) ||
+                 Application.loadedLevelName == name)) return;
             this.QueueSceneLoad(name, settings);
             this.ExecuteLoad();
         }
 
         public void LoadScenes(params SceneQueueItem[] items)
         {
+
             this.QueueScenesLoad(items);
             this.ExecuteLoad();
         }
@@ -270,5 +269,6 @@ namespace uFrame.Kernel
         public string Name { get; set; }
         public IEnumerator Loader { get; set; }
         public ISceneSettings Settings { get; set; }
+        public bool RestrictToSingleScene { get; set; }
     }
 }
